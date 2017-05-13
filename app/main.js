@@ -1,7 +1,8 @@
 import "./main.scss";
-import Game from "./modules/game";
+import GameEngine from "./modules/GameEngine";
 
 const canvas = document.querySelector("#plain");
 canvas.width = document.body.clientWidth;
 canvas.height = document.body.clientHeight;
-Game(canvas);
+const ge = new GameEngine(canvas);
+ge.start();
