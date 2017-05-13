@@ -1,8 +1,9 @@
-export default function Scene() {
-	this.actors = [];
-	this.light = null;
+export default class Scene {
+	constructor() {
+		this.actors = [];
+		this.light = null;
+	}
+	add(actor) {
+		this.actors = [ ...this.actors, actor ];
+	}
 }
-
-Scene.prototype.add = function (actor) {
-	this.actors = [ ...this.actors, actor ];
-};

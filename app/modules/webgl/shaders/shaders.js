@@ -16,10 +16,15 @@ export function initializeShader(gl) {
 		console.log("Unable to initialize the shader program: " + gl.getProgramInfoLog(shader));
 	}
 	gl.useProgram(shader);
+
 	const position = gl.getAttribLocation(shader, "position");
 	gl.enableVertexAttribArray(position);
 
-	return { shader, attributes: { position } };
+	const color = gl.getAttribLocation(shader, "color");
+	gl.enableVertexAttribArray(color);
+
+
+	return { shader, attributes: { position, color } };
 }
 
 function createShader(gl, source, type) {
