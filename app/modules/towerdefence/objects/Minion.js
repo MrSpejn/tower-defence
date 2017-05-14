@@ -5,7 +5,9 @@ const defaults = {
 	hp: 20,
 	x: 0,
 	y: 0,
-	speed: 10,
+	sx: 0,
+	sy: 0,
+	sz: 0,
 	size: 1,
 };
 

@@ -28,5 +28,8 @@
     "webpack": "=2.4.1",
     "webpack-dashboard": "=0.3.0",
     "webpack-dev-server": "=2.4.4"
+  },
+  "dependencies": {
+    "cannon": "^0.6.2"
   }
 }
