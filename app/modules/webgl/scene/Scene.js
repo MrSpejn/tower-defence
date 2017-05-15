@@ -10,4 +10,7 @@ export default class Scene {
 	addAll(actors) {
 		this.actors = [ ...this.actors, ...actors ];
 	}
+	removeAll(actors) {
+		this.actors = this.actors.filter(a => !actors.includes(a));
+	}
 }

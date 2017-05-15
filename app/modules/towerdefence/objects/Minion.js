@@ -2,9 +2,12 @@ import Cube from "../../webgl/actors/Cube";
 import GameObject from "./Object";
 
 const defaults = {
-	hp: 20,
+	hp: 16,
 	x: 0,
 	y: 0,
+	rx: 0,
+	ry: 0,
+	rz: 0,
 	sx: 0,
 	sy: 0,
 	sz: 0,
@@ -18,9 +21,10 @@ export default class Minion extends GameObject {
 		for (let key in options) {
 			this[key] = options[key];
 		}
+		this.chp = this.hp;
+		this.z = 25;
 	}
 	generateModel() {
-		this.z = 25;
 		return new Cube(0xff0000ff);
 	}
 }

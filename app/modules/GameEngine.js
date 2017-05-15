@@ -13,15 +13,18 @@ export default class GameEngine {
 		this.physics = new PhysicsEngine(this.game.getElements());
 
 		this.game.on("createObject", obj => {
-			this.scene.addObject(obj);
+			this.scene.addAll(to3DActor(obj));
 			this.physics.addObject(obj);
 		});
 
 		this.game.on("removeObject", obj => {
-			this.scene.removeObject(obj);
+			this.scene.removeAll(to3DActor(obj));
 			this.physics.removeObject(obj);
 		});
 
+		this.physics.on("collision", (obj1, obj2) => {
+			this.game.collide(obj1, obj2);
+		});
 	}
 	start() {
 		let f;
@@ -45,16 +48,18 @@ export default class GameEngine {
 function to3DActors(elements) {
 	let actors = [];
 	elements.forEach(el => {
-		const d3 = el.get3DRepresentation();
-		if (d3 instanceof Array) actors = [...actors, ...d3];
-		else {
-			actors = [...actors, d3];
-		}
+		actors = [...actors, ...to3DActor(el)];
 	});
 	return actors;
 }
 
-
+function to3DActor(el) {
+	const d3 = el.get3DRepresentation();
+	if (d3 instanceof Array) return [...d3];
+	else {
+		return [d3];
+	}
+}
 function updateActorsPosition(objects) {
 	objects.forEach(translateObjectCoordsTo3D);
 }
@@ -64,7 +69,9 @@ function translateObjectCoordsTo3D(obj) {
 		const x = (obj.x / 25) - 50;
 		const y = 50 - (obj.y / 25) + 12;
 		const z = (obj.z / 25) + 1;
-		obj.get3DRepresentation().translate(x, y, z);
+		const model = obj.get3DRepresentation();
+		model.translate(x, y, z);
+		model.rotate(obj.rx, obj.ry, obj.rz);
 	}
 	obj._moved = false;
 }

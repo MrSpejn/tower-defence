@@ -3,12 +3,16 @@ import GameObject from "./Object";
 
 const defaults = {
 	damage: 12,
-	attack_speed: 0.5,
-	range: 200,
+	attack_speed: 10,
+	range: 400,
 	size: 1,
 	x: 0,
 	y: 0,
-	missile_type: "default"
+	rx: 0,
+	ry: 0,
+	rz: 0,
+	missile_type: "default",
+	delay: 0,
 };
 
 
