@@ -34,14 +34,18 @@ export default class GameEngine {
 			this.renderGame(n - timeSince);
 		};
 		loop(Date.now());
-		// setTimeout(() => cancelAnimationFrame(f), 10000);
-
 	}
 	renderGame(timeDelta) {
+		const start = Date.now();
 		this.game.update(timeDelta);
+		const s1 = Date.now();
 		this.physics.update(timeDelta);
+		const s2 = Date.now();
 		updateActorsPosition(this.game.getObjects());
+		const s3 = Date.now();
 		this.renderer.render(this.scene, this.camera);
+		const s4 = Date.now();
+		console.log(s1 - start, s2 - s1, s3 - s2, s4 - s3);
 	}
 }
 

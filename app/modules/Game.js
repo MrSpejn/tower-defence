@@ -11,10 +11,11 @@ export default class Game {
 		const turret = new Turret({ x: 600, y: 800, attack_speed: 2 });
 		const turret2 = new Turret({ x: 1200, y: 300, attack_speed: 2 });
 		const turret3 = new Turret({ x: 800, y: 1500, attack_speed: 2, range: 600 });
+		const turret4 = new Turret({ x: 1400, y: 2050, attack_speed: 5, range: 300 });
 
 		this.ticker = 0;
 		this.minions = [ ];
-		this.turrets = [ turret, turret2, turret3 ];
+		this.turrets = [ turret, turret2, turret3, turret4 ];
 		this.missiles = [];
 		this.board = new Board(Map);
 	}
@@ -42,7 +43,7 @@ export default class Game {
 	}
 	update(timeDelta) {
 		this.minions.forEach(minion => {
-			if ($V([minion.x, minion.y]).subtract(minion.dest).modulus() < 5) {
+			if ($V([minion.x, minion.y]).subtract(minion.dest).modulus() < 10) {
 				minion.progress++;
 			}
 			followTrack(minion, Map.tracks);
@@ -58,7 +59,7 @@ export default class Game {
 			if (!this.minions.includes(missile.target)) {
 				this.missiles = this.missiles.filter(m => m != missile);
 				this.removeObject(missile);
-			} else followTarget(missile)
+			} else followTarget(missile);
 		});
 		this.ticker += timeDelta;
 		if (this.ticker > 300) {
@@ -74,7 +75,7 @@ export default class Game {
 	}
 	getBoard() { return this.board; }
 	getObjects() { return [ ...this.turrets, ...this.missiles, ...this.minions ]; }
-	getElements() { return [this.board, ...this.getObjects() ]; }
+	getElements() { return [ this.board, ...this.getObjects() ]; }
 }
 
 
@@ -120,7 +121,7 @@ function followTarget(missile) {
 }
 
 function addMinion(game, Map) {
-	const minion = new Minion({ speed: 100 });
+	const minion = new Minion({ speed: 200 });
 	minion.track = Math.floor(Math.random() * 3) + 1;
 	const startCell = Map.tracks[minion.track - 1][0];
 	minion.x = startCell[1]*50;

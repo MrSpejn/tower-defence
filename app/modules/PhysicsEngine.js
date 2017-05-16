@@ -89,7 +89,7 @@ function mapElementToBody(el) {
 	} else if (el instanceof Minion) {
 		return new Cannon.Body({
 			mass: 50,
-			shape: new Cannon.Box(new Cannon.Vec3(25, 25, 25)),
+			shape: new Cannon.Box(new Cannon.Vec3(20, 20, 20)),
 			position: new Cannon.Vec3(el.x, el.y, el.z),
 			velocity: new Cannon.Vec3(el.sx, el.sy, el.sz),
 			linearDamping: 0,
