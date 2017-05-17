@@ -6,7 +6,6 @@ export default class Board {
 		this.fields = fields;
 	}
 	get3DRepresentation() {
-		const result = [];
 		return new LandCluster(this.fields.heights, this.fields.field_types);
 	}
 }

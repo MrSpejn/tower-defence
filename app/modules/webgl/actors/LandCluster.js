@@ -6,14 +6,18 @@ export default class LandCluster extends Actor {
 		super();
 		this.positionBuffer = "landmark";
 		this.colorBuffer = "landmarkc";
+		this.normalsBuffer = "landmarkn";
 		this.positionArray = [];
-		this.vertexCount = 0;
+		this.normalsArray = [];
 		this.colorArray = [];
+		this.vertexCount = 0;
 		ftypes.forEach((row, i) => row.forEach((type, j) => {
 			const r = type === 0 ? 0x32c15f : 0xfafdc4;
 			const c = new Land(getHeights(heights, i, j), r * 0x100 + 0xff, 2*j - 50,  50 - 2*i + 12);
 			this.positionArray = [...this.positionArray, ...c.positionArray];
 			this.colorArray = [...this.colorArray, ...c.colorArray];
+			this.normalsArray = [...this.normalsArray, ...c.normalsArray];
+
 			this.vertexCount += c.vertexCount;
 		}));
 	}

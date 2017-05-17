@@ -5,9 +5,11 @@ export default class Cube extends Actor {
 		super();
 		color = convertHexToWebGL(color);
 		this.positionBuffer = "cube_position_buffer";
+		this.normalsBuffer = "cube_normals_buffer";
 		this.colorBuffer = `cube_color_buffer#${color.join(",")}`;
 		this.positionArray = getCubeVertexArray();
 		this.colorArray = getCubeColorArray(color);
+		this.normalsArray = getCubeNormalsArray();
 		this.vertexCount = 36;
 	}
 }
@@ -63,6 +65,60 @@ function getCubeVertexArray() {
 		1, 1,-1,
 	];
 	return position;
+}
+
+function getCubeNormalsArray() {
+	const normals = [
+		1.0,-1.0,-1.0,
+		-1.0, 1.0,-1.0,
+		-1.0,-1.0,-1.0,
+
+		1.0,-1.0,-1.0,
+		1.0, 1.0,-1.0,
+		-1.0, 1.0,-1.0,
+
+
+		-1.0,-1.0, 1.0,
+		1.0, 1.0, 1.0,
+		1.0,-1.0, 1.0,
+
+		-1.0,-1.0, 1.0,
+		-1.0, 1.0, 1.0,
+		1.0, 1.0, 1.0,
+
+		1.0,-1.0, 1.0,
+		1.0, 1.0,-1.0,
+		1.0,-1.0,-1.0,
+
+		1.0,-1.0, 1.0,
+		1.0, 1.0, 1.0,
+		1.0, 1.0,-1.0,
+
+		-1.0,-1.0,-1.0,
+		-1.0, 1.0, 1.0,
+		-1.0,-1.0, 1.0,
+
+		-1.0,-1.0,-1.0,
+		-1.0, 1.0,-1.0,
+		-1.0, 1.0, 1.0,
+
+		-1.0,-1.0,-1.0,
+		1.0,-1.0, 1.0,
+		1.0,-1.0,-1.0,
+
+		-1.0,-1.0,-1.0,
+		-1.0,-1.0, 1.0,
+		1.0,-1.0, 1.0,
+
+		-1.0, 1.0, 1.0,
+		1.0, 1.0,-1.0,
+		1.0, 1.0, 1.0,
+
+		-1.0, 1.0, 1.0,
+		-1.0, 1.0,-1.0,
+		1.0, 1.0,-1.0
+	];
+	return normals;
 }
 
 function getCubeColorArray(color) {

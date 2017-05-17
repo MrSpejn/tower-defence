@@ -1,5 +1,5 @@
-import fragmentShader from "./fragment/initial-shader.glsl";
-import vertexShader from "./vertex/initial-shader.glsl";
+import fragmentShader from "./fragment/directlight-shader.glsl";
+import vertexShader from "./vertex/directlight-shader.glsl";
 
 export function attachToAttribute(gl, buffer, attribute, size) {
 	gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
@@ -20,11 +20,14 @@ export function initializeShader(gl) {
 	const position = gl.getAttribLocation(shader, "position");
 	gl.enableVertexAttribArray(position);
 
+	const normal = gl.getAttribLocation(shader, "normal");
+	gl.enableVertexAttribArray(normal);
+
 	const color = gl.getAttribLocation(shader, "color");
 	gl.enableVertexAttribArray(color);
 
 
-	return { shader, attributes: { position, color } };
+	return { shader, attributes: { position, color, normal } };
 }
 
 function createShader(gl, source, type) {

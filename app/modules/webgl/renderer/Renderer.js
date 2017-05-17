@@ -1,5 +1,5 @@
 import { initializeShader, attachToAttribute } from "../shaders/shaders";
-
+import { Matrix, $V } from "../../math/sylvester";
 export default class Renderer {
 	constructor(canvas) {
 		this.gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
@@ -26,15 +26,21 @@ export default class Renderer {
 		this.gl.uniformMatrix4fv(uP, false, new Float32Array(camera.getP().ensure4x4().flatten()));
 		this.gl.uniformMatrix4fv(uV, false, new Float32Array(camera.getV().ensure4x4().flatten()));
 
-		scene.actors.forEach(actor => this.renderActor(actor));
+		scene.actors.forEach(actor => this.renderActor(actor, camera.getV()));
 	}
 
-	renderActor(actor) {
+	renderActor(actor, V) {
 		if (!this.buffers[actor.positionBuffer]) {
 			this.buffers[actor.positionBuffer] = createBuffer(this.gl, actor.positionArray);
 		}
 
 		attachToAttribute(this.gl, this.buffers[actor.positionBuffer], this.attributes["position"], 3);
+
+		if (!this.buffers[actor.normalsBuffer]) {
+			this.buffers[actor.normalsBuffer] = createBuffer(this.gl, actor.normalsArray);
+		}
+
+		attachToAttribute(this.gl, this.buffers[actor.normalsBuffer], this.attributes["normal"], 3);
 
 		if (!this.buffers[actor.colorBuffer]) {
 			this.buffers[actor.colorBuffer] = createBuffer(this.gl, actor.colorArray);
@@ -45,7 +51,12 @@ export default class Renderer {
 		const uM = this.gl.getUniformLocation(this.shader, "M");
 		this.gl.uniformMatrix4fv(uM, false, new Float32Array(actor.getM().ensure4x4().flatten()));
 
+		const uNorm = this.gl.getUniformLocation(this.shader, "normalMatrix");
+		const normal = V.x(actor.getM()).inverse().transpose();
+		this.gl.uniformMatrix4fv(uNorm, false, new Float32Array(normal.flatten()));
+
 		this.gl.drawArrays(this.gl.TRIANGLES, 0, actor.vertexCount);
+
 	}
 }
 
