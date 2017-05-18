@@ -14,10 +14,15 @@ export default class LandCluster extends Actor {
 		ftypes.forEach((row, i) => row.forEach((type, j) => {
 			const r = type === 0 ? 0x32c15f : 0xfafdc4;
 			const c = new Land(getHeights(heights, i, j), r * 0x100 + 0xff, 2*j - 50,  50 - 2*i + 12);
-			this.positionArray = [...this.positionArray, ...c.positionArray];
-			this.colorArray = [...this.colorArray, ...c.colorArray];
-			this.normalsArray = [...this.normalsArray, ...c.normalsArray];
-
+			c.positionArray.forEach(e => {
+				this.positionArray.push(e);
+			});
+			c.colorArray.forEach(e => {
+				this.colorArray.push(e);
+			});
+			c.normalsArray.forEach(e => {
+				this.normalsArray.push(e);
+			});
 			this.vertexCount += c.vertexCount;
 		}));
 	}
