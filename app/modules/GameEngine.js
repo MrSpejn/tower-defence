@@ -3,14 +3,15 @@ import Game from "./Game";
 import PhysicsEngine from "./PhysicsEngine";
 import Scene from "./webgl/scene/Scene";
 import { PerspectiveCamera } from "./webgl/camera/camera";
+import Mountains from "./towerdefence/Mountains";
 
 export default class GameEngine {
 	constructor(canvas) {
-		this.camera = new PerspectiveCamera(canvas.width/canvas.height, -Math.PI / 6, 105);
+		this.camera = new PerspectiveCamera(canvas.width/canvas.height, -Math.PI /6, 100);
 		this.renderer = new Renderer(canvas);
 		this.game = new Game();
 		this.scene = new Scene(to3DActors(this.game.getElements()));
-		this.physics = new PhysicsEngine(this.game.getElements());
+		this.physics = new PhysicsEngine(this.game.getObjects());
 
 		this.game.on("createObject", obj => {
 			this.scene.addAll(to3DActor(obj));
@@ -41,7 +42,7 @@ export default class GameEngine {
 		const s1 = Date.now();
 		this.physics.update(timeDelta);
 		const s2 = Date.now();
-		updateActorsPosition(this.game.getObjects());
+		updateActorsPosition(this.game.getElements());
 		const s3 = Date.now();
 		this.renderer.render(this.scene, this.camera);
 		const s4 = Date.now();
@@ -70,12 +71,21 @@ function updateActorsPosition(objects) {
 
 function translateObjectCoordsTo3D(obj) {
 	if (obj._moved) {
-		const x = (obj.x / 25) - 50;
-		const y = 50 - (obj.y / 25) + 12;
-		const z = (obj.z / 25) + 1;
+		const x = translateX(obj.x);
+		const y = translateY(obj.y);
+		if (obj instanceof Mountains) console.log(x, y);
+		const z = (obj.z / 25);
 		const model = obj.get3DRepresentation();
 		model.translate(x, y, z);
-		model.rotate(obj.rx, obj.ry, obj.rz);
+		if (obj.rx) model.rotate(obj.rx, obj.ry, obj.rz);
 	}
 	obj._moved = false;
+}
+
+export function translateX(x) {
+	return (x / 25) - 50;
+}
+
+export function translateY(y) {
+	return 58 - (y / 25);
 }

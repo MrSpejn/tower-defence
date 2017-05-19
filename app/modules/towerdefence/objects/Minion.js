@@ -12,6 +12,7 @@ const defaults = {
 	sy: 0,
 	sz: 0,
 	size: 1,
+	movable: true
 };
 
 export default class Minion extends GameObject {

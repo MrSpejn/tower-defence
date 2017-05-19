@@ -10,7 +10,11 @@ const defaults = {
 	x: 0,
 	y: 0,
 	z: 0,
-	damage: 10
+	sx: 0,
+	sy: 0,
+	sz: 0,
+	damage: 10,
+	movable: true
 };
 
 export default class Missile extends GameObject {

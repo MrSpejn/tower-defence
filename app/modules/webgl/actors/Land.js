@@ -8,6 +8,9 @@ export default class Land extends Actor {
 		this.positionBuffer = `land_position_buffer#${heights.join(",")}`;
 		this.colorBuffer = `land_color_buffer#${color.join(",")}`;
 		this.normalsBuffer = `land_normals_buffer#${heights.join(",")}`;
+		this.vertices = [[1, 1],[0, 1],[1, 1],[1, 0],[0, 0],[1,0],[1, 1],[0, 1],[1, 1]].map((xy, i) => xy.push(heights[i]));
+		this.x = x;
+		this.y = y;
 
 		const triangles = generatePositionArray(heights, x, y);
 		this.positionArray = unnest(triangles);

@@ -2,6 +2,8 @@ import Minion from "./towerdefence/objects/Minion";
 import Missile from "./towerdefence/objects/Missile";
 import Turret from "./towerdefence/objects/Turret";
 import Board from "./towerdefence/Board";
+import Mountains from "./towerdefence/Mountains";
+
 import Map from "./map";
 import { $V } from "./math/sylvester";
 
@@ -18,6 +20,16 @@ export default class Game {
 		this.turrets = [ turret, turret2, turret3, turret4 ];
 		this.missiles = [];
 		this.board = new Board(Map);
+		this.leftMountains = new Mountains(50, 30, 50);
+		this.leftMountains.x = -5*50;
+		this.leftMountains.y = 29*50;
+
+		this.rightMountains = new Mountains(50, 30, 50);
+		this.rightMountains.x = 75*50;
+		this.rightMountains.y = 29*50;
+
+
+
 	}
 	on(event, handler) {
 		if (this._handlers[event]) {
@@ -74,8 +86,8 @@ export default class Game {
 		this._handlers.removeObject.forEach(fn => fn.call(null, obj));
 	}
 	getBoard() { return this.board; }
-	getObjects() { return [ ...this.turrets, ...this.missiles, ...this.minions ]; }
-	getElements() { return [ this.board, ...this.getObjects() ]; }
+	getObjects() { return [ this.board, ...this.turrets, ...this.missiles, ...this.minions ]; }
+	getElements() { return [ this.leftMountains, this.rightMountains, ...this.getObjects() ]; }
 }
 
 

@@ -10,7 +10,7 @@ export default class PhysicsEngine {
 			collision: [],
 		};
 		this.world = new Cannon.World();
-		this.world.gravity.set(0, 0, -9.82);
+		this.world.gravity.set(0, 0, -9.83);
 		this.phys = elements.map(el => {
 			const body = mapElementToBody(el);
 			body._el = el;
@@ -35,7 +35,11 @@ export default class PhysicsEngine {
 		if (time == 0) return;
 		this.phys.forEach(body => {
 			const el = body._el;
-			body.velocity = new Cannon.Vec3(el.sx, el.sy, el.sz);
+			if (el.movable) {
+				body.velocity.x = el.sx;
+				body.velocity.y = el.sy;
+				if (el.sz) body.velocity.z = el.sz;
+			}
 		});
 
 		this.world.step(1/time);
@@ -48,6 +52,8 @@ export default class PhysicsEngine {
 				el.y = body.position.y;
 				el.z = body.position.z;
 			}
+			console.log(el.z);
+
 		});
 	}
 	addObject(el) {
@@ -98,7 +104,7 @@ function mapElementToBody(el) {
 	} else {
 		return new Cannon.Body({
 			mass: 2,
-			shape: new Cannon.Box(new Cannon.Vec3(25, 25, 25)),
+			shape: new Cannon.Box(new Cannon.Vec3(20, 20, 20)),
 			position: new Cannon.Vec3(el.x, el.y, el.z),
 			velocity: new Cannon.Vec3(el.sx, el.sy, el.sz),
 			linearDamping: 0,
