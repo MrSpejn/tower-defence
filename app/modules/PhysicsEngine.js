@@ -10,7 +10,7 @@ export default class PhysicsEngine {
 			collision: [],
 		};
 		this.world = new Cannon.World();
-		this.world.gravity.set(0, 0, -9.83);
+		this.world.gravity.set(0, 0, 0.0);
 		this.phys = elements.map(el => {
 			const body = mapElementToBody(el);
 			body._el = el;
@@ -38,7 +38,10 @@ export default class PhysicsEngine {
 			if (el.movable) {
 				body.velocity.x = el.sx;
 				body.velocity.y = el.sy;
-				if (el.sz) body.velocity.z = el.sz;
+				body.velocity.z = el.sz;
+				body.position.x = el.x;
+				body.position.y = el.y;
+				body.position.z = el.z;
 			}
 		});
 
@@ -46,13 +49,12 @@ export default class PhysicsEngine {
 
 		this.phys.forEach(body => {
 			const el = body._el;
-			if (el.x != body.position.x || el.y != body.position.y || el.y != body.position.z) {
+			if ((el.x != body.position.x || el.y != body.position.y || el.y != body.position.z ) && !(body._el instanceof Board)) {
 				el._moved = true;
 				el.x = body.position.x;
 				el.y = body.position.y;
 				el.z = body.position.z;
 			}
-			console.log(el.z);
 
 		});
 	}
@@ -74,41 +76,44 @@ export default class PhysicsEngine {
 	}
 }
 
-const m = new Cannon.Material({ friction: 0 });
+const m = new Cannon.Material({ friction: 0, restitution: 0 });
 
 function mapElementToBody(el) {
 
 	if (el instanceof Board ) {
-		return new Cannon.Body({
-			mass: 0,
-			shape: new Cannon.Plane(),
-			position: new Cannon.Vec3(el.x, el.y, el.z),
-			material: m
-		});
+		return el.getBody();
 	}
 	else if (el instanceof Turret) {
 		return new Cannon.Body({
 			mass: 0,
 			shape: new Cannon.Box(new Cannon.Vec3(25, 25, 125)),
-			position: new Cannon.Vec3(el.x, el.y, el.z)
+			position: new Cannon.Vec3(el.x, el.y, el.z),
+			collisionFilterGroup: 0,
+			collisionFilterMask: 0,
 		});
 	} else if (el instanceof Minion) {
-		return new Cannon.Body({
-			mass: 50,
-			shape: new Cannon.Box(new Cannon.Vec3(20, 20, 20)),
+		const body =  new Cannon.Body({
+			mass: 500,
+			shape: new Cannon.Sphere(25),
 			position: new Cannon.Vec3(el.x, el.y, el.z),
 			velocity: new Cannon.Vec3(el.sx, el.sy, el.sz),
 			linearDamping: 0,
+			collisionFilterGroup: 4,
+			collisionFilterMask: 12,
 			material: m
 		});
+		body.collisionResponse = false;
+		return body;
 	} else {
 		return new Cannon.Body({
-			mass: 2,
+			mass: 0.01,
 			shape: new Cannon.Box(new Cannon.Vec3(20, 20, 20)),
 			position: new Cannon.Vec3(el.x, el.y, el.z),
 			velocity: new Cannon.Vec3(el.sx, el.sy, el.sz),
 			linearDamping: 0,
-			material: m
+			material: m,
+			collisionFilterGroup: 8,
+			collisionFilterMask: 4
 		});
 	}
 }

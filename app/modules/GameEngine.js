@@ -46,7 +46,6 @@ export default class GameEngine {
 		const s3 = Date.now();
 		this.renderer.render(this.scene, this.camera);
 		const s4 = Date.now();
-		console.log(s1 - start, s2 - s1, s3 - s2, s4 - s3);
 	}
 }
 
@@ -73,7 +72,6 @@ function translateObjectCoordsTo3D(obj) {
 	if (obj._moved) {
 		const x = translateX(obj.x);
 		const y = translateY(obj.y);
-		if (obj instanceof Mountains) console.log(x, y);
 		const z = (obj.z / 25);
 		const model = obj.get3DRepresentation();
 		model.translate(x, y, z);
@@ -88,4 +86,12 @@ export function translateX(x) {
 
 export function translateY(y) {
 	return 58 - (y / 25);
+}
+
+export function revertX(x) {
+	return (x + 50) * 25;
+}
+
+export function revertY(y) {
+	return (58 - y) * 25;
 }
