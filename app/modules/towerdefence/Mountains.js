@@ -5,7 +5,7 @@ export default class Mountains {
 		this.x = 0;
 		this.y = 0;
 		this.z = 0;
-		const heights = generateHeightMatrix(rows, cols, 12, 16);
+		const heights = generateHeightMatrix(rows, cols, 17, 23);
 		this.model = new LandCluster(heights, generateTypeMatrix(heights), size, 0, 0);
 		this._moved = true;
 	}
@@ -34,7 +34,7 @@ function generateHeightMatrix(rows, cols, min, max) {
 		for (let j = 0; j < cols; j++) {
 			const dist = Math.min(j, cols - 1 - j);
 			if (dist == 0) result[i][j] = 3;
-			else result[i][j] = Math.floor(Math.random()*(max - min)) + min - (Math.ceil(cols / 4) - Math.ceil(dist / 2));
+			else result[i][j] = Math.floor(Math.random()*(max - min)) + min - (Math.ceil(cols / 2) - Math.ceil(dist));
 		}
 	}
 	return result;

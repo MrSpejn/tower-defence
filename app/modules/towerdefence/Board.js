@@ -1,5 +1,6 @@
 import LandCluster from "../webgl/actors/LandCluster";
 import Cannon from "cannon";
+import { revertX, revertY } from "../GameEngine";
 
 export default class Board {
 	constructor(fields) {
@@ -7,23 +8,30 @@ export default class Board {
 		this.x = 0;
 		this.y = 0;
 		this.z = 0;
-		this.boardModel = new LandCluster(this.fields.heights, this.fields.field_types, 50, 0, 0);
-		this.bodies = [];
-		this.boardModel.lands.forEach(row => row.forEach(land => {
-			const shape = landToTriMesh(land.vertices);
-			const body = new Cannon.Body({
-				shape: shape,
-			});
-		}));
+		this.boardModel = new LandCluster(fields.heights, fields.field_types, 50, 0, 0);
+
 		this.sideModels = [
 			new LandCluster(
 				replicate(this.fields.heights[0], 4),
-				replicate(this.fields.field_types[0], 4), 50, 0, -100),
+				replicate(this.fields.field_types[0], 4), 50, 0, -150),
 		];
-
+		this.body = new Cannon.Body({
+			mass: 0,
+			shape: new Cannon.Trimesh(this.boardModel.vertices.map((v, i) => {
+				switch (i % 3) {
+				case 0: return revertX(v);
+				case 1:	return revertY(v);
+				case 2: return v * 25;
+				}
+			}), this.boardModel.indices),
+			position: new Cannon.Vec3(0,0,-2),
+			material: new Cannon.Material({ friction: 0, restitution: 0 }),
+			collisionFilterGroup: 2,
+			collisionFilterMask: 0
+		});
 	}
-	getBodies() {
-
+	getBody() {
+		return this.body;
 	}
 	get3DRepresentation() {
 		return [...this.sideModels, this.boardModel];
@@ -39,7 +47,6 @@ function landToTriMesh(vertices) {
 function unnest1(nested) {
 	return nested.reduce((list, sublist) => [...list, ...sublist], []);
 }
-
 function replicate(row, n) {
 	const result = [];
 	result.push(row);
