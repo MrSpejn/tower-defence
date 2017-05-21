@@ -115,15 +115,15 @@ function followTrack(object, tracks) {
 
 	const delta3 = (Map.heights[object.prevCell[1]][object.prevCell[0]] - Map.heights[currCell[1]][currCell[0]]) * 25;
 
-	if (Math.abs(delta1) < 15) {
+	if (delta2 <= 0 && Math.abs(delta1) < 17) {
 		object.z = Map.heights[nextCell[1]][nextCell[0]] * 25 + 25;
 		return;
 	}
 	let velocity3D;
 	if (delta1 > 0) {
-		velocity3D = $V([object.sx, object.sy, delta2 / 50 * object.speed]).toUnitVector().x(object.speed);
+		velocity3D = $V([object.sx, object.sy, delta2 / 50 * object.speed]).toUnitVector().x(object.speed*0.7);
 	} else if (delta3 > 0) {
-		velocity3D = $V([object.sx, object.sy, -delta3 / 50 * object.speed]).toUnitVector().x(object.speed);
+		velocity3D = $V([object.sx, object.sy, -delta3 / 50 * object.speed]).toUnitVector().x(object.speed*1.2);
 	} else return;
 
 	object.sx = velocity3D.elements[0];
