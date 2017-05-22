@@ -5,7 +5,7 @@ import { combineNormals } from "../../math/grid-normals";
 
 let id = 0;
 export default class LandCluster extends Actor {
-	constructor(heights, ftypes, size, startX, startY) {
+	constructor(heights, ftypes, size, startX, startY, texture = null) {
 		super();
 		id++;
 		this.positionBuffer = `landmark${id}`;
@@ -32,8 +32,26 @@ export default class LandCluster extends Actor {
 		this.positionArray = trianglesCoordsFlat;
 		this.colorArray = calculateColors(ftypes);
 		this.vertexCount = heights.length * heights[0].length * 24;
+
+		if (texture) {
+			this.hasTexture = true;
+			this.texture = texture;
+			this.texCoordBuffer = `landmarkt${id}`;
+			this.texCoordArray = calculateTexCoords(ftypes);
+		}
 	}
 }
+
+function calculateTexCoords(field_types) {
+	const texCoord = [];
+	field_types.forEach(row => row.forEach(type => {
+		getTexCoordsForType(type).forEach(coord => {
+			texCoord.push(coord);
+		});
+	}));
+	return texCoord;
+}
+
 function calculateColors(field_types) {
 	const colors = [];
 
@@ -173,6 +191,18 @@ const DIRT = 4;
 const ROCK = 5;
 const SNOW = 6;
 
+function getTexCoordsForType(type) {
+	switch (type) {
+	case DIRT: return  mapSquareToTriangles(0,0);
+	case GRASS: return mapSquareToTriangles(0.5,0.5);
+	default: return mapSquareToTriangles(0,0);
+	}
+}
+
+function mapSquareToTriangles(x, y) {
+	const coords = [0,0, 0.25,0, 0.25,0.25, 0.25,0, 0.5,0, 0.25,0.25, 0.5,0,  0.5,0.25, 0.25,0.25, 0.5,0.25, 0.5,0.5,  0.25,0.25, 0.5,0.5, 0.25,0.5,  0.25,0.25, 0.25,0.5, 0,0.5,  0.25,0.25, 0,0.5, 0,0.25, 0.25,0.25, 0,0.25, 0,0, 0.25,0.25];
+	return coords.map((value, i) => i % 2 == 0 ? value + x : value + y);
+}
 
 function typeToColor(type) {
 	switch (type) {

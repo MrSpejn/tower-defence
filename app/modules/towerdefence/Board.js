@@ -8,12 +8,12 @@ export default class Board {
 		this.x = 0;
 		this.y = 0;
 		this.z = 0;
-		this.boardModel = new LandCluster(fields.heights, fields.field_types, 50, 0, 0);
+		this.boardModel = new LandCluster(fields.heights, fields.field_types, 50, 0, 0, "textures.jpg");
 
 		this.sideModels = [
 			new LandCluster(
 				replicate(this.fields.heights[0], 4),
-				replicate(this.fields.field_types[0], 4), 50, 0, -150),
+				replicate(this.fields.field_types[0], 4), 50, 0, -150, "textures.jpg"),
 		];
 		this.body = new Cannon.Body({
 			mass: 0,

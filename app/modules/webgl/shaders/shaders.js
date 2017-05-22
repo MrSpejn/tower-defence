@@ -15,7 +15,6 @@ export function initializeShader(gl) {
 	if (!gl.getProgramParameter(shader, gl.LINK_STATUS)) {
 		console.log("Unable to initialize the shader program: " + gl.getProgramInfoLog(shader));
 	}
-	gl.useProgram(shader);
 
 	const position = gl.getAttribLocation(shader, "position");
 	gl.enableVertexAttribArray(position);
