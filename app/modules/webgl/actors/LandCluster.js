@@ -37,12 +37,12 @@ export default class LandCluster extends Actor {
 			this.hasTexture = true;
 			this.texture = texture;
 			this.texCoordBuffer = `landmarkt${id}`;
-			this.texCoordArray = calculateTexCoords(ftypes);
+			this.texCoordArray = calculateTexCoords(ftypes, this.vertexCount);
 		}
 	}
 }
 
-function calculateTexCoords(field_types) {
+function calculateTexCoords(field_types, size) {
 	const texCoord = [];
 	field_types.forEach(row => row.forEach(type => {
 		getTexCoordsForType(type).forEach(coord => {
@@ -193,14 +193,14 @@ const SNOW = 6;
 
 function getTexCoordsForType(type) {
 	switch (type) {
-	case DIRT: return  mapSquareToTriangles(0,0);
+	case DIRT: return mapSquareToTriangles(0,0);
 	case GRASS: return mapSquareToTriangles(0.5,0.5);
 	default: return mapSquareToTriangles(0,0);
 	}
 }
 
 function mapSquareToTriangles(x, y) {
-	const coords = [0,0, 0.25,0, 0.25,0.25, 0.25,0, 0.5,0, 0.25,0.25, 0.5,0,  0.5,0.25, 0.25,0.25, 0.5,0.25, 0.5,0.5,  0.25,0.25, 0.5,0.5, 0.25,0.5,  0.25,0.25, 0.25,0.5, 0,0.5,  0.25,0.25, 0,0.5, 0,0.25, 0.25,0.25, 0,0.25, 0,0, 0.25,0.25];
+	const coords = [0,0, 0.25,0, 0.25,0.25, 0.25,0, 0.48,0, 0.25,0.25, 0.48,0,  0.48,0.25, 0.25,0.25, 0.48,0.25, 0.48,0.48,  0.25,0.25, 0.48,0.48, 0.25,0.48,  0.25,0.25, 0.25,0.48, 0,0.48,  0.25,0.25, 0,0.48, 0,0.25, 0.25,0.25, 0,0.25, 0,0, 0.25,0.25];
 	return coords.map((value, i) => i % 2 == 0 ? value + x : value + y);
 }
 

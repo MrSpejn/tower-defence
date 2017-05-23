@@ -1,4 +1,4 @@
-import { initializeShader, attachToAttribute } from "../shaders/shaders";
+import { initializeShaders, attachToAttribute } from "../shaders/shaders";
 import { Matrix, $V } from "../../math/sylvester";
 export default class Renderer {
 	constructor(canvas) {
@@ -10,13 +10,7 @@ export default class Renderer {
 		this.gl.enable(this.gl.DEPTH_TEST);
 		this.gl.depthFunc(this.gl.LEQUAL);
 
-		const { shader1, attributes1 } = initializeShader(this.gl, "color-shader");
-		const { shader2, attributes2 } = initializeShader(this.gl, "texture-shader");
-
-		this.shaders = {
-			"color-shader": [shader1, attributes1],
-			"texture-shader": [shader2, attributes2]
-		};
+		this.shaders = initializeShaders(this.gl);
 		this.shader = null;
 		this.attributes = null;
 		this.buffers = {};
@@ -31,30 +25,34 @@ export default class Renderer {
 
 	renderActor(actor, V, P) {
 		if (actor.hasTexture) {
-			this.shader = this.shaders["texture-shader"][0];
-			this.attributes = this.shaders["texture-shader"][1];
-			gl.useProgram(this.shader);
+			this.shader = this.shaders["texture"][0];
+			this.attributes = this.shaders["texture"][1];
+			this.gl.useProgram(this.shader);
 
-			if (!this.texture[actor.texture]) {
-				this.texture[actor.texture] = initializeTexture(this.gl, actor.texture);
+			if (!this.textures[actor.texture]) {
+				this.textures[actor.texture] = initializeTexture(this.gl, actor.texture);
 			}
 
-			gl.activeTexture(gl.TEXTURE0);
-			gl.bindTexture(gl.TEXTURE_2D, this.texture[actor.texture]);
-			gl.uniform1i(gl.getUniformLocation(this.shader, 'uSampler'), 0);
+			this.gl.activeTexture(this.gl.TEXTURE0);
+			this.gl.bindTexture(this.gl.TEXTURE_2D, this.textures[actor.texture]);
+			this.gl.uniform1i(this.gl.getUniformLocation(this.shader, "uSampler"), 0);
 
-			if (!this.texture[this.texCoordBuffer]) {
-				this.texture[this.texCoordBuffer] = createBuffer(this.gl, actor.texCoordArray);
+			if (!this.buffers[actor.texCoordBuffer]) {
+				this.buffers[actor.texCoordBuffer] = createBuffer(this.gl, actor.texCoordArray);
 			}
-			attachToAttribute(this.gl, this.buffers[actor.positionBuffer], this.attributes["texCoords"], 2);
+			attachToAttribute(this.gl, this.buffers[actor.texCoordBuffer], this.attributes["texCoords"], 2);
 
 		} else {
-			this.shader = this.shaders["color-shader"][0];
-			this.attributes = this.shaders["color-shader"][1];
-			gl.useProgram(this.shader);
+			this.shader = this.shaders["default"][0];
+			this.attributes = this.shaders["default"][1];
+			this.gl.useProgram(this.shader);
 
+			if (!this.buffers[actor.colorBuffer]) {
+				this.buffers[actor.colorBuffer] = createBuffer(this.gl, actor.colorArray);
+			}
+
+			attachToAttribute(this.gl, this.buffers[actor.colorBuffer], this.attributes["color"], 4);
 		}
-
 
 		const uP = this.gl.getUniformLocation(this.shader, "P");
 		const uV = this.gl.getUniformLocation(this.shader, "V");
@@ -74,11 +72,7 @@ export default class Renderer {
 
 		attachToAttribute(this.gl, this.buffers[actor.normalsBuffer], this.attributes["normal"], 3);
 
-		if (!this.buffers[actor.colorBuffer]) {
-			this.buffers[actor.colorBuffer] = createBuffer(this.gl, actor.colorArray);
-		}
 
-		attachToAttribute(this.gl, this.buffers[actor.colorBuffer], this.attributes["color"], 4);
 
 		const uM = this.gl.getUniformLocation(this.shader, "M");
 		this.gl.uniformMatrix4fv(uM, false, new Float32Array(actor.getM().ensure4x4().flatten()));
@@ -86,7 +80,6 @@ export default class Renderer {
 		const uNorm = this.gl.getUniformLocation(this.shader, "normalMatrix");
 		const normal = V.x(actor.getM()).inverse().transpose();
 		this.gl.uniformMatrix4fv(uNorm, false, new Float32Array(normal.flatten()));
-
 		this.gl.drawArrays(this.gl.TRIANGLES, 0, actor.vertexCount);
 
 	}
@@ -102,7 +95,11 @@ function createBuffer(gl, data) {
 function initializeTexture(gl, textureName) {
 	const texture = gl.createTexture();
 	gl.bindTexture(gl.TEXTURE_2D, texture);
-	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, document.querySelector(`#${textureName.split('.')[0]}`));
+	const image = document.querySelector(`#${textureName.split(".")[0]}`);
+	if (!(image instanceof Image) && !image.complete && image.naturalHeight === 0) {
+		throw "Image not loaded";
+	}
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
 	gl.generateMipmap(gl.TEXTURE_2D);
