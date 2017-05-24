@@ -9,7 +9,6 @@ export default class Renderer {
 		this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 		this.gl.enable(this.gl.DEPTH_TEST);
 		this.gl.depthFunc(this.gl.LEQUAL);
-
 		this.shaders = initializeShaders(this.gl);
 		this.shader = null;
 		this.attributes = null;

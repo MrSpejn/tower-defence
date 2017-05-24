@@ -44,8 +44,8 @@ export default class LandCluster extends Actor {
 
 function calculateTexCoords(field_types, size) {
 	const texCoord = [];
-	field_types.forEach(row => row.forEach(type => {
-		getTexCoordsForType(type).forEach(coord => {
+	field_types.forEach((row, i) => row.forEach((type, j) => {
+		getTexCoordsForType(type, i, j).forEach(coord => {
 			texCoord.push(coord);
 		});
 	}));
@@ -191,17 +191,23 @@ const DIRT = 4;
 const ROCK = 5;
 const SNOW = 6;
 
-function getTexCoordsForType(type) {
+function getTexCoordsForType(type, i, j) {
+	const s = 0.05;
+	const size = 0.40;
+	const x = s+(j%8)*size/8;
+	const y = s+(i%8)*size/8;
+	console.log(x, y);
 	switch (type) {
-	case DIRT: return mapSquareToTriangles(0,0);
-	case GRASS: return mapSquareToTriangles(0.5,0.5);
-	default: return mapSquareToTriangles(0,0);
+	case DIRT: return mapSquareToTriangles(x,y, size/8);
+	case GRASS: return mapSquareToTriangles(x+0.5, y+0.5, size/8);
+	case ROCK: return mapSquareToTriangles(x+0.5, y, size/8);
+	case SNOW: return mapSquareToTriangles(x, y+0.5, size/8);
 	}
 }
 
-function mapSquareToTriangles(x, y) {
-	const coords = [0,0, 0.25,0, 0.25,0.25, 0.25,0, 0.48,0, 0.25,0.25, 0.48,0,  0.48,0.25, 0.25,0.25, 0.48,0.25, 0.48,0.48,  0.25,0.25, 0.48,0.48, 0.25,0.48,  0.25,0.25, 0.25,0.48, 0,0.48,  0.25,0.25, 0,0.48, 0,0.25, 0.25,0.25, 0,0.25, 0,0, 0.25,0.25];
-	return coords.map((value, i) => i % 2 == 0 ? value + x : value + y);
+function mapSquareToTriangles(x, y, scale) {
+	const coords = [0,0, .5,0, .5,.5, .5,0, 1,0, .5,.5, 1,0, 1,.5, .5,.5, 1,.5, 1,1, .5,.5, 1,1, .5,1, .5,.5, .5,1, 0,1, .5,.5, 0,1, 0,.5, .5,.5, 0,.5, 0,0, .5,.5];
+	return coords.map((value, i) => i % 2 == 0 ? value*scale + x : value*scale + y);
 }
 
 function typeToColor(type) {

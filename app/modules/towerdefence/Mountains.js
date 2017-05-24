@@ -5,8 +5,8 @@ export default class Mountains {
 		this.x = 0;
 		this.y = 0;
 		this.z = 0;
-		const heights = generateHeightMatrix(rows, cols, 17, 23);
-		this.model = new LandCluster(heights, generateTypeMatrix(heights), size, 0, 0);
+		const heights = generateHeightMatrix(rows, cols, 18, 26);
+		this.model = new LandCluster(heights, generateTypeMatrix(heights), size, 0, 0, "textures.jpg");
 		this._moved = true;
 	}
 	get3DRepresentation() {
@@ -20,7 +20,7 @@ function generateTypeMatrix(heights) {
 	for (let i = 0; i < heights.length; i++) {
 		result.push([]);
 		for (let j = 0; j < heights[0].length; j++) {
-			if (heights[i][j] > 12) result[i][j] = 6;
+			if (heights[i][j] > 16) result[i][j] = 6;
 			else result[i][j] = 5;
 		}
 	}
