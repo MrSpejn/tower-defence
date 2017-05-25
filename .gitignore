@@ -1,3 +1,5 @@
 app/bundle.*
 node_modules
 npm-debug.log
+*.blend1
+*.mtl

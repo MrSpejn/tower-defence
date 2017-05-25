@@ -11,9 +11,9 @@ export default class Game {
 	constructor() {
 		this._handlers = { createObject: [], removeObject: [] };
 		const turret = new Turret({ x: 600, y: 800, attack_speed: 2 });
-		const turret2 = new Turret({ x: 1200, y: 2100, attack_speed: 2 });
+		const turret2 = new Turret({ x: 1200, y: 350, attack_speed: 2 });
 		const turret3 = new Turret({ x: 800, y: 1500, attack_speed: 2, range: 600 });
-		const turret4 = new Turret({ x: 1400, y: 2050, attack_speed: 5, range: 300 });
+		const turret4 = new Turret({ x: 1400, y: 2100, attack_speed: 5, range: 300 });
 
 		this.ticker = 0;
 		this.minions = [ ];

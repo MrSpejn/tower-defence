@@ -1,6 +1,7 @@
-import Cube from "../../webgl/actors/Cube";
 import GameObject from "./Object";
-
+import towerOBJ from "../../../models/tower.obj";
+import ObjActor from "../../webgl/actors/ObjActor";
+import Cube from "../../webgl/actors/Cube";
 const defaults = {
 	damage: 12,
 	attack_speed: 10,
@@ -25,9 +26,9 @@ export default class Turret extends GameObject {
 		}
 	}
 	generateModel() {
-		const turret = new Cube(0x0000ffff);
-		turret.scaleZ(5);
-		this.z = 125;
-		return turret;
+		this.z = 150;
+		const turret2 = new ObjActor(towerOBJ, "tower", 0x0000ffff);
+		turret2.rotateX(Math.PI / 2);
+		return turret2;
 	}
 }

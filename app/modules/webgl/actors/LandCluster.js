@@ -196,7 +196,6 @@ function getTexCoordsForType(type, i, j) {
 	const size = 0.40;
 	const x = s+(j%8)*size/8;
 	const y = s+(i%8)*size/8;
-	console.log(x, y);
 	switch (type) {
 	case DIRT: return mapSquareToTriangles(x,y, size/8);
 	case GRASS: return mapSquareToTriangles(x+0.5, y+0.5, size/8);

@@ -79,9 +79,24 @@ export default class Renderer {
 		const uNorm = this.gl.getUniformLocation(this.shader, "normalMatrix");
 		const normal = V.x(actor.getM()).inverse().transpose();
 		this.gl.uniformMatrix4fv(uNorm, false, new Float32Array(normal.flatten()));
-		this.gl.drawArrays(this.gl.TRIANGLES, 0, actor.vertexCount);
 
+		if (actor.indicesBased) {
+			if (!this.buffers[actor.indicesBuffer]) {
+				this.buffers[actor.indicesBuffer] = createElementBuffer(this.gl, actor.indicesArray);
+			}
+			this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffers[actor.indicesBuffer]);
+			this.gl.drawElements(this.gl.TRIANGLES, actor.indicesArray.length, this.gl.UNSIGNED_SHORT, 0);
+		} else {
+			this.gl.drawArrays(this.gl.TRIANGLES, 0, actor.vertexCount);
+		}
 	}
+}
+
+function createElementBuffer(gl, data) {
+	const buffer = gl.createBuffer();
+	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
+	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(data), gl.STATIC_DRAW);
+	return buffer;
 }
 
 function createBuffer(gl, data) {

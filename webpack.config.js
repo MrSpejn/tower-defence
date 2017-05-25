@@ -27,12 +27,16 @@ module.exports = {
       			})
 			},
 			{
-				test: /\.(gif|png|jpe?g|svg)$/i,
+				test: /\.(gif|png|jpe?g|svg)$/,
 				use: 'file-loader'
 			},
 			{
 				test: /\.(glsl|vs|fs)$/,
 				use: 'shader-loader'
+			},
+			{
+				test: /\.obj$/,
+				use: 'raw-loader'
 			}
 		]
 	},
