@@ -5,7 +5,7 @@ import OBJ from "webgl-obj-loader";
 const meshes = {};
 
 export default class ObjActor extends Actor {
-	constructor(filestring, id, color = 0xffffffff) {
+	constructor(filestring, id, texture, color = 0xffffffff) {
 		super();
 		if (!meshes[id]) {
 			meshes[id] = new OBJ.Mesh(filestring);
@@ -16,12 +16,19 @@ export default class ObjActor extends Actor {
 		this.colorBuffer = `obj_color_buffer${id}`;
 		this.indicesBuffer = `obj_indices_buffer${id}`;
 		this.positionArray = mesh.vertices;
-		this.colorArray = flatColorArray(mesh.vertices.length/3, color);
 		this.normalsArray = mesh.vertexNormals;
 		this.vertexCount = mesh.indices;
 		this.indicesArray = mesh.indices;
 		this.indicesBased = true;
-		console.log(this.colorArray.length/4, this.positionArray.length/3, this.normalsArray.length/3);
+		console.log(mesh);
+		if (texture) {
+			this.hasTexture = true;
+			this.texCoordBuffer = `obj_texture_buffer${id}`;
+			this.texture = texture;
+			this.texCoordArray = mesh.textures;
+		} else {
+			this.colorArray = flatColorArray(mesh.vertices.length/3, color);
+		}
 	}
 }
 

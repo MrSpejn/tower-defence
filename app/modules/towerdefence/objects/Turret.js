@@ -27,7 +27,7 @@ export default class Turret extends GameObject {
 	}
 	generateModel() {
 		this.z = 150;
-		const turret2 = new ObjActor(towerOBJ, "tower", 0x0000ffff);
+		const turret2 = new ObjActor(towerOBJ, "tower", "tower-texture.png", 0x0000ffff);
 		turret2.rotateX(Math.PI / 2);
 		return turret2;
 	}
