@@ -46,11 +46,11 @@ function shoot(stage, turret, targets) {
 	const target = targets[Math.floor(Math.random()*targets.length)];
 
 	const missileBlueprint = {
-		type: 'MISSILE',
+		type: "MISSILE",
 		coordinates: {
 			x: turret.coordinates.x,
 			y: turret.coordinates.y,
-			z: turret.coordinates.z + turret.height
+			z: turret.coordinates.z + turret.height - 30
 		},
 		options: {
 			target: target,

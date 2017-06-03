@@ -1,4 +1,5 @@
-import Cube from "../../webgl/actors/Cube";
+import missileOBJ from "../../../models/missile.obj";
+import ObjActor from "../../webgl/actors/ObjActor";
 import GameObject from "./Object";
 import Cannon from "cannon";
 import { $V } from "../../math/sylvester";
@@ -17,8 +18,7 @@ export default class Missile extends GameObject {
 	}
 
 	generateModel() {
-		const model = new Cube(null, 0xfc9f14ff);
-		model.scaleXY(0.3, 0.3);
+		const model = new ObjActor(missileOBJ, "missile", "missile.png", 0x0000ffff);
 		model.quaternions = true;
 		this.coordinates.rotation = [0,0,0,0];
 		model.coordinates = this.coordinates;
