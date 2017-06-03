@@ -10,9 +10,9 @@ void main(void) {
 	vec3 vlight = vec3(0,0,0);
 	vec4 color = texture2D(uSampler, vec2(ftexCoords.s, ftexCoords.t));
 
-	vlight.r = min(0.5+1.0*directional/2.0, 1.0);
-	vlight.g = min(0.5+1.0*directional/2.0, 1.0);
-	vlight.b = min(0.5+1.0*directional/2.0, 1.0);
+	vlight.r = min(0.6+1.0*directional/1.5, 1.0);
+	vlight.g = min(0.6+1.0*directional/1.5, 1.0);
+	vlight.b = min(0.6+1.0*directional/1.5, 1.0);
 
 	gl_FragColor = vec4(color.rgb*vlight,color.a);
 }

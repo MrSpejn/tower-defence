@@ -1,34 +1,72 @@
 import GameObject from "./Object";
 import towerOBJ from "../../../models/tower.obj";
 import ObjActor from "../../webgl/actors/ObjActor";
-import Cube from "../../webgl/actors/Cube";
+import { $V } from "../../math/sylvester";
+
 const defaults = {
 	damage: 12,
-	attack_speed: 10,
-	range: 400,
+	attack_speed: 1,
+	range: 600,
+	height: 150,
 	size: 1,
-	x: 0,
-	y: 0,
-	rx: 0,
-	ry: 0,
-	rz: 0,
 	missile_type: "default",
 	delay: 0,
+	isActive: true
 };
 
-
 export default class Turret extends GameObject {
-	constructor(options) {
-		super();
-		options = { ...defaults, ...options };
-		for (let key in options) {
-			this[key] = options[key];
-		}
+	constructor(coordinates, options) {
+		super(coordinates, { ...defaults, ...options });
 	}
 	generateModel() {
-		this.z = 150;
-		const turret2 = new ObjActor(towerOBJ, "tower", "tower-texture.png", 0x0000ffff);
-		turret2.rotateX(Math.PI / 2);
-		return turret2;
+		return new ObjActor(towerOBJ, "tower", "tower-texture.png", 0x0000ffff);
 	}
+	generateBody() {
+		return null;
+	}
+	update(stage, tick) {
+		fireAtWill(tick, this, stage);
+	}
+}
+
+function fireAtWill(delta, turret, stage) {
+	const minions = stage.getMinions();
+
+	if (turret.delay > 0) return turret.delay -= delta;
+
+	const possibleTargets = findPossibleTargets(stage, turret, minions);
+	if (possibleTargets.length > 0) {
+		shoot(stage, turret, minions);
+		turret.delay = 1000 / turret.attack_speed;
+	}
+}
+
+function shoot(stage, turret, targets) {
+
+	const target = targets[Math.floor(Math.random()*targets.length)];
+
+	const missileBlueprint = {
+		type: 'MISSILE',
+		coordinates: {
+			x: turret.coordinates.x,
+			y: turret.coordinates.y,
+			z: turret.coordinates.z + turret.height
+		},
+		options: {
+			target: target,
+		}
+	};
+
+	stage.createObject(missileBlueprint);
+}
+
+function findPossibleTargets(staget, turret, minions) {
+	const vec2Position = $V([turret.coordinates.x, turret.coordinates.y]);
+	const vec3Position = $V([turret.coordinates.x, turret.coordinates.y, turret.coordinates.z + turret.height ]);
+
+	return minions.filter(minion => {
+		const vec2MinionPosition = $V([ minion.coordinates.x, minion.coordinates.y ]);
+		const range = (turret.range + (turret.coordinates.z - minion.coordinates.z) / 4);
+		return vec2Position.subtract(vec2MinionPosition).modulus() < range;
+	});
 }

@@ -20,7 +20,6 @@ export default class ObjActor extends Actor {
 		this.vertexCount = mesh.indices;
 		this.indicesArray = mesh.indices;
 		this.indicesBased = true;
-		console.log(mesh);
 		if (texture) {
 			this.hasTexture = true;
 			this.texCoordBuffer = `obj_texture_buffer${id}`;
@@ -39,7 +38,6 @@ function flatColorArray(length, color) {
 		c[3-j] = ((color%0x100)/0xff);
 		color = Math.floor(color/0x100);
 	}
-	console.log(c);
 	for (let i = 0; i < length; i++) {
 		for (let j = 0; j < 4; j++) {
 			result.push(c[j]);

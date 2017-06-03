@@ -1,5 +1,4 @@
 import Actor from "./Actor";
-import { translateX, translateY } from "../../GameEngine";
 import { Matrix, $V } from "../../math/sylvester";
 import { combineNormals } from "../../math/grid-normals";
 
@@ -42,9 +41,9 @@ export default class LandCluster extends Actor {
 	}
 }
 
-function calculateTexCoords(field_types, size) {
+function calculateTexCoords(types, size) {
 	const texCoord = [];
-	field_types.forEach((row, i) => row.forEach((type, j) => {
+	types.forEach((row, i) => row.forEach((type, j) => {
 		getTexCoordsForType(type, i, j).forEach(coord => {
 			texCoord.push(coord);
 		});
@@ -52,10 +51,10 @@ function calculateTexCoords(field_types, size) {
 	return texCoord;
 }
 
-function calculateColors(field_types) {
+function calculateColors(types) {
 	const colors = [];
 
-	field_types.forEach(row => row.forEach(type => {
+	types.forEach(row => row.forEach(type => {
 		const rgba = convertHexToWebGL(typeToColor(type)*0x100+0xff);
 
 		for (let i = 0; i < 24; i++) {
@@ -232,4 +231,12 @@ function convertHexToWebGL(color) {
 	const red = (color % 0x100) / 0xff;
 
 	return [ red, green, blue, alpha ];
+}
+
+function translateX(x) {
+	return (x / 25) - 50;
+}
+
+function translateY(y) {
+	return 58 - (y / 25);
 }

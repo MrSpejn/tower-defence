@@ -1,0 +1,42 @@
+import Turret from "./objects/Turret";
+import Minion from "./objects/Minion";
+import Missile from "./objects/Missile";
+
+export default class ObjectMaintainer {
+	createTurret(x, y) {
+		return new Turret({ x, y, z: 150 });
+	}
+	createMinion(track, progress) {
+		return new Minion({ z: 0 }, { track, progress });
+	}
+	createMissile(x, y, z, target) {
+		return new Missile({ x, y, z }, { target });
+	}
+	create(blueprint, minions, turrets, missiles) {
+		let object = null;
+		switch (blueprint.type) {
+		case "MISSILE":
+			object = new Missile(blueprint.coordinates, blueprint.options);
+			missiles.push(object);
+			return object;
+		case "MINION":
+			object = new Minion(blueprint.coordinates, blueprint.options);
+			minions.push(object);
+			return object;
+		case "TURRET":
+			object = new Minion(blueprint.coordinates, blueprint.options);
+			minions.push(object);
+			return object;
+		default: throw `Invalid object type ${blueprint.type}`;
+		}
+	}
+	remove(object, minions, turrets, missiles) {
+		if (object instanceof Turret) {
+			turrets.splice(turrets.indexOf(object), 1);
+		} else if (object instanceof Missile) {
+			missiles.splice(missiles.indexOf(object), 1);
+		} else {
+			minions.splice(minions.indexOf(object), 1);
+		}
+	}
+}

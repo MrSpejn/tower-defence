@@ -23,8 +23,11 @@
 	"globals": {
 		"makePerspective":true,
 		"Float32Array":true,
+		"Uint16Array":true,
+		"Uint32Array":true,
         "Matrix": true,
-        "$V": true
+        "$V": true,
+		"Symbol": true
     },
 	"plugins": [
     	"react"
