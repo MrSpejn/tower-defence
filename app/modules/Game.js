@@ -49,14 +49,14 @@ export default class Game {
 
 		const timeDelta = start - lastTick;
 
-		this.physics.update(timeDelta);
-		this.display.update(timeDelta);
-
+		this.stage.update(timeDelta);
 		this.objects.forEach(object => {
 			if (object.isActive) object.update(this.stage, timeDelta);
 		});
 
-		this.stage.update(timeDelta);
+		this.physics.update(timeDelta);
+		this.display.update(timeDelta);
+
 		if (this.stage.checkWinConditions()) {
 			console.log("Win");
 		}

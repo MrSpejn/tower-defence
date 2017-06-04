@@ -6,7 +6,7 @@ import { $V } from "../../math/sylvester";
 const defaults = {
 	damage: 12,
 	attack_speed: 1,
-	range: 600,
+	range: 500,
 	height: 150,
 	size: 1,
 	missile_type: "default",
@@ -36,7 +36,7 @@ function fireAtWill(delta, turret, stage) {
 
 	const possibleTargets = findPossibleTargets(stage, turret, minions);
 	if (possibleTargets.length > 0) {
-		shoot(stage, turret, minions);
+		shoot(stage, turret, possibleTargets);
 		turret.delay = 1000 / turret.attack_speed;
 	}
 }
@@ -60,13 +60,19 @@ function shoot(stage, turret, targets) {
 	stage.createObject(missileBlueprint);
 }
 
-function findPossibleTargets(staget, turret, minions) {
+function findPossibleTargets(stage, turret, minions) {
 	const vec2Position = $V([turret.coordinates.x, turret.coordinates.y]);
 	const vec3Position = $V([turret.coordinates.x, turret.coordinates.y, turret.coordinates.z + turret.height ]);
+	const vec3LauncherPosition = $V([ turret.coordinates.x, turret.coordinates.y, turret.coordinates.z + turret.height - 30 ]);
 
-	return minions.filter(minion => {
+	return minions
+	.filter(minion => {
 		const vec2MinionPosition = $V([ minion.coordinates.x, minion.coordinates.y ]);
 		const range = (turret.range + (turret.coordinates.z - minion.coordinates.z) / 4);
 		return vec2Position.subtract(vec2MinionPosition).modulus() < range;
+	})
+	.filter(minion => {
+		const vec3MinionPosition = $V([ minion.coordinates.x, minion.coordinates.y, minion.coordinates.z + 30 ]);
+		return !stage.polyland.linePassesThrought(vec3LauncherPosition, vec3MinionPosition);
 	});
 }

@@ -14,8 +14,11 @@ export default class LandCluster extends Actor {
 
 		const [ coordinatesMatrix, coordinatesList, coordinatesFlat ] = calculateCoordinates(heights, size, startX, startY);
 		const rowSize = coordinatesMatrix[0].length;
+		this.rows = heights.length;
+		this.cols = heights[0].length;
 
 		const [ indices, triangles, trianglesCoordsFlat ] = calculateTriangles(coordinatesMatrix, coordinatesList);
+		this.triangles = triangles;
 		const trianglesNormals = calculateNormals(triangles);
 		const normalsMatrix = combineNormals(coordinatesMatrix.length, rowSize, trianglesNormals);
 		const normals = [];
@@ -140,8 +143,8 @@ function calculateCoordinates(heights, size, startX, startY) {
 				if (j % 2 == 0) h = meanHorizontalTwo(heights, Math.floor(i/2), Math.floor(j/2));
 				else h = heights[Math.floor(i/2)][Math.floor(j/2)];
 			}
-			const x = translateX(size/2*j+startX);
-			const y = translateY(size/2*i+startY);
+			const x = translateX(size/2*(j-1)+startX);
+			const y = translateY(size/2*(i-1)+startY);
 			coordinatesMatrix[i][j] = [x, y, h];
 			coordinatesList.push([x, y, h]);
 			coordinatesFlat.push(x);

@@ -15,12 +15,12 @@ const defaults = {
 export default class Missile extends GameObject {
 	constructor(coordinates, options) {
 		super(coordinates, { ...defaults, ...options });
+		followTarget(this);
 	}
 
 	generateModel() {
 		const model = new ObjActor(missileOBJ, "missile", "missile.png", 0x0000ffff);
 		model.quaternions = true;
-		this.coordinates.rotation = [0,0,0,0];
 		model.coordinates = this.coordinates;
 
 		return model;
@@ -43,10 +43,11 @@ export default class Missile extends GameObject {
 	}
 
 	update(stage, tick) {
-		if (this.target.chp <= 0) stage.removeObject(this);
+		if (this.target.chp <= 0 || this.target.passed) stage.removeObject(this);
 		else followTarget(this);
 	}
 	collideWith(object, stage) {
+		if (object != this.target) return;
 		object.chp -= this.damage;
 		if (object.chp <= 0) stage.removeObject(object);
 		stage.removeObject(this);

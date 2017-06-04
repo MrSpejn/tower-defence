@@ -5,7 +5,7 @@ import GameObject from "./Object";
 import { $V } from "../../math/sylvester";
 
 const defaults = {
-	hp: 80,
+	hp: 10,
 	size: 1,
 	speed: 150,
 	isActive: true,
@@ -100,6 +100,7 @@ function calculateRotation(speedX, speedY) {
 }
 
 function minionReachedEnd(stage, minion) {
+	minion.passed = true;
 	stage.removeObject(minion);
 }
 
