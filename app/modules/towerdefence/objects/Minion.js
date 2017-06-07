@@ -61,7 +61,8 @@ function updateTrack(minion, stage) {
 		minion.progress++;
 		const directionCell = minion.track[minion.progress];
 
-		if (!directionCell) return minionReachedEnd(stage, minion);
+		if (!directionCell || getNextCell(minion)[1] > 49 || getNextCell(minion)[0] > 49)
+			return minionReachedEnd(stage, minion);
 		else {
 			const vecDest = $V([ directionCell[1]*50, directionCell[0]*50 ]);
 			minion.destination = vecDest;
@@ -137,8 +138,8 @@ function calculateSpeedCorrectionFor3DTerrain(minion, heights) {
 
 function getNextCell(minion) {
 	const velocity = $V([ minion.coordinates.sx, minion.coordinates.sy ]);
-	const x = Math.floor(minion.coordinates.x / 50);
-	const y = Math.floor(minion.coordinates.y / 50);
+	const x = Math.floor(minion.coordinates.x / 50 + 0.5);
+	const y = Math.floor(minion.coordinates.y / 50 + 0.5);
 
 	const angle = velocity.angleFrom($V([2, 0])) + Math.PI / 8;
 
@@ -155,7 +156,7 @@ function getNextCell(minion) {
 }
 
 function getMinionCell(minion) {
-	const x = Math.floor(minion.coordinates.x / 50);
-	const y = Math.floor(minion.coordinates.y / 50);
+	const x = Math.floor(minion.coordinates.x / 50  + 0.5);
+	const y = Math.floor(minion.coordinates.y / 50  + 0.5);
 	return [x, y];
 }

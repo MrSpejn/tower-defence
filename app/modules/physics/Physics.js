@@ -15,7 +15,11 @@ class Physics {
 	update(time) {
 		if (time == 0) return;
 		this.transferToCannon();
-		this.world.step(1/time);
+		try {
+			this.world.step(1/time);
+		} catch(e) {
+			console.warn(e);
+		}
 		this.transferFromCannon();
 	}
 	transferToCannon() {

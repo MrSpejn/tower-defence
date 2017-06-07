@@ -38,22 +38,22 @@ class Stage {
 		const turret1 = this.objectMaintaner.createTurret(900, 800);
 		const turret2 = this.objectMaintaner.createTurret(400, 1400);
 		const turret3 = this.objectMaintaner.createTurret(400, 1700);
-		const turret4 = this.objectMaintaner.createTurret(850, 1550);
-		const turret5 = this.objectMaintaner.createTurret(1400, 2200);
+		const turret4 = this.objectMaintaner.createTurret(800, 1550);
+		const turret5 = this.objectMaintaner.createTurret(1400, 2200, 5);
 
 		this[minions] = [ ];
-		this[turrets] = [ turret1, turret2, turret3, turret4, turret5 ];
+		this[turrets] = [ turret1,turret2,turret3,turret4,turret5 ];
 		this[missiles] = [  ];
 
 
 	}
 
 	createObject(blueprints) {
-		const object = this.objectMaintaner.create(blueprints, this[minions], this[turrets], this[turrets]);
+		const object = this.objectMaintaner.create(blueprints, this[minions], this[turrets], this[missiles]);
 		this.dispatch("create", object);
 	}
 	removeObject(object) {
-		this.objectMaintaner.remove(object, this[minions], this[turrets], this[turrets]);
+		this.objectMaintaner.remove(object, this[minions], this[turrets], this[missiles]);
 		this.dispatch("remove", object);
 	}
 	checkWinConditions() {
@@ -63,7 +63,7 @@ class Stage {
 		this.clock += tick;
 		if (this.clock > 300) {
 			this.createObject({
-				type: 'MINION',
+				type: "MINION",
 				options: {
 					track: this.tracks[Math.floor(Math.random()*6)]
 				}

@@ -24,19 +24,31 @@ export default class ObjectMaintainer {
 			minions.push(object);
 			return object;
 		case "TURRET":
-			object = new Minion(blueprint.coordinates, blueprint.options);
-			minions.push(object);
+			object = new Turret(blueprint.coordinates, blueprint.options);
+			turrets.push(object);
 			return object;
 		default: throw `Invalid object type ${blueprint.type}`;
 		}
 	}
 	remove(object, minions, turrets, missiles) {
 		if (object instanceof Turret) {
-			turrets.splice(turrets.indexOf(object), 1);
+			const idx = turrets.indexOf(object);
+
+			if (idx != -1) turrets.splice(turrets.indexOf(object), 1);
+			else console.error("Object already removed", object);
 		} else if (object instanceof Missile) {
-			missiles.splice(missiles.indexOf(object), 1);
+			const idx = missiles.indexOf(object);
+
+			if (idx != -1) missiles.splice(missiles.indexOf(object), 1);
+			else console.error("Object already removed", object);
+
+		} else if (object instanceof Minion) {
+			const idx = minions.indexOf(object);
+
+			if (idx != -1) minions.splice(minions.indexOf(object), 1);
+			else console.error("Object already removed", object);
 		} else {
-			minions.splice(minions.indexOf(object), 1);
+			console.error("Cannon remove object");
 		}
 	}
 }

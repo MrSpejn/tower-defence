@@ -78,7 +78,6 @@ class Polyland {
 		const bz = start.elements[2] - az*start.elements[0];
 
 
-		if (tilesOfInterest.length == 0) debugger;
 		const intersected = tilesOfInterest.filter(({ tile, j, i }) => {
 			const x1 = (j*50-25);
 			const x2 = (j*50+25);
@@ -90,7 +89,6 @@ class Polyland {
 			(z2 >= tile.maxZ && z1 <= tile.minZ) ||
 			(z1 >= tile.maxZ && z2 <= tile.minZ);
 		});
-		if (ey >= 45) debugger;
 
 		return intersected.length > 0;
 	}

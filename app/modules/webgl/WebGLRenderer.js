@@ -1,9 +1,12 @@
 import { PerspectiveCamera } from "./camera/camera";
 import Scene from "./scene/Scene";
 import Renderer from "./renderer/Renderer";
+import Publisher from "../utils/Publisher";
+import { $V } from "../math/sylvester";
 
-
-export default class WebGLRenderer {
+export default
+@Publisher(["click", "hover"])
+class WebGLRenderer {
 	constructor(canvas) {
 		this.scene = new Scene([]);
 		this.camera = new PerspectiveCamera(canvas.width/canvas.height, -Math.PI /6, 100);

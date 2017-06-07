@@ -25,13 +25,11 @@ export default class Game {
 		});
 
 		stage.on("create", object => {
-			this.objects.push(object);
 			this.physics.addObjects(translateToPhysicalRepresentation(object));
 			this.display.addObjects(translateToDisplayRepresentation(object));
 		});
 
 		stage.on("remove", object => {
-			this.objects = this.objects.filter(o => o != object);
 			this.physics.removeObjects(translateToPhysicalRepresentation(object));
 			this.display.removeObjects(translateToDisplayRepresentation(object));
 		});
@@ -50,7 +48,7 @@ export default class Game {
 		const timeDelta = start - lastTick;
 
 		this.stage.update(timeDelta);
-		this.objects.forEach(object => {
+		this.stage.getObjects().forEach(object => {
 			if (object.isActive) object.update(this.stage, timeDelta);
 		});
 

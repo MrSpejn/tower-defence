@@ -35,6 +35,9 @@ function fireAtWill(delta, turret, stage) {
 	if (turret.delay > 0) return turret.delay -= delta;
 
 	const possibleTargets = findPossibleTargets(stage, turret, minions);
+	turret.allTargets = [...minions];
+	turret.possibleTargets = [...possibleTargets];
+	turret.targeting = new Date();
 	if (possibleTargets.length > 0) {
 		shoot(stage, turret, possibleTargets);
 		turret.delay = 1000 / turret.attack_speed;
@@ -45,6 +48,7 @@ function shoot(stage, turret, targets) {
 
 	const target = targets[Math.floor(Math.random()*targets.length)];
 
+	target.targeted = true;
 	const missileBlueprint = {
 		type: "MISSILE",
 		coordinates: {
@@ -60,19 +64,22 @@ function shoot(stage, turret, targets) {
 	stage.createObject(missileBlueprint);
 }
 
-function findPossibleTargets(stage, turret, minions) {
+export function findPossibleTargets(stage, turret, minions, debug) {
 	const vec2Position = $V([turret.coordinates.x, turret.coordinates.y]);
 	const vec3Position = $V([turret.coordinates.x, turret.coordinates.y, turret.coordinates.z + turret.height ]);
 	const vec3LauncherPosition = $V([ turret.coordinates.x, turret.coordinates.y, turret.coordinates.z + turret.height - 30 ]);
 
+
+
 	return minions
 	.filter(minion => {
 		const vec2MinionPosition = $V([ minion.coordinates.x, minion.coordinates.y ]);
-		const range = (turret.range + (turret.coordinates.z - minion.coordinates.z) / 4);
-		return vec2Position.subtract(vec2MinionPosition).modulus() < range;
+		const range = (turret.range);
+		const distance = vec2Position.subtract(vec2MinionPosition).modulus();
+		return distance < range;
 	})
 	.filter(minion => {
-		const vec3MinionPosition = $V([ minion.coordinates.x, minion.coordinates.y, minion.coordinates.z + 30 ]);
+		const vec3MinionPosition = $V([ minion.coordinates.x, minion.coordinates.y, minion.coordinates.z + 50 ]);
 		return !stage.polyland.linePassesThrought(vec3LauncherPosition, vec3MinionPosition);
 	});
 }

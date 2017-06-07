@@ -47,7 +47,7 @@ export default class Missile extends GameObject {
 		else followTarget(this);
 	}
 	collideWith(object, stage) {
-		if (object != this.target) return;
+		if (object != this.target || this.target.chp <= 0) return;
 		object.chp -= this.damage;
 		if (object.chp <= 0) stage.removeObject(object);
 		stage.removeObject(this);
