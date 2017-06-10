@@ -1,5 +1,8 @@
 import { initializeShaders, attachToAttribute } from "../shaders/shaders";
 import { Matrix, $V } from "../../math/sylvester";
+
+let line;
+
 export default class Renderer {
 	constructor(canvas) {
 		this.gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
@@ -20,6 +23,16 @@ export default class Renderer {
 		this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
 		scene.actors.forEach(actor => this.renderActor(actor, camera.getV(), camera.getP()));
+
+		if (this.line) {
+			this.renderActor(this.line, camera.getV(), camera.getP());
+		}
+		if (this.highlights) {
+			this.highlights.forEach(highlight => this.renderActor(highlight, camera.getV(), camera.getP()));
+		}
+		if (this.points) {
+			this.points.forEach(point => this.renderActor(point, camera.getV(), camera.getP()));
+		}
 	}
 
 	renderActor(actor, V, P) {
@@ -80,7 +93,10 @@ export default class Renderer {
 		const normal = V.x(actor.getM()).inverse().transpose();
 		this.gl.uniformMatrix4fv(uNorm, false, new Float32Array(normal.flatten()));
 
-		if (actor.indicesBased) {
+		if (actor.render) {
+			actor.render(this.gl);
+		}
+		else if (actor.indicesBased) {
 			if (!this.buffers[actor.indicesBuffer]) {
 				this.buffers[actor.indicesBuffer] = createElementBuffer(this.gl, actor.indicesArray);
 			}

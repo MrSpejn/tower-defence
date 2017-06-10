@@ -1,4 +1,5 @@
 import { $V } from "../math/sylvester";
+import _ from "lodash";
 
 class Polyland {
 	constructor(rows, cols, triangles) {
@@ -28,6 +29,7 @@ class Polyland {
 				this.tiles[i][j] = tile;
 			}
 		}
+
 	}
 	linePassesThrought(start, end, direction) {
 		const s2D = $V([ start.elements.slice(0,2) ]);
@@ -90,8 +92,88 @@ class Polyland {
 			(z1 >= tile.maxZ && z2 <= tile.minZ);
 		});
 
-		return intersected.length > 0;
+		if (intersected.length === 0) return false;
+		else return intersected;
 	}
+
+	intersect(start, end, direction) {
+
+		const sx = Math.max(Math.min(Math.floor((start[0]+51)/2), 49), 0);
+		const sy = Math.max(Math.min(Math.floor((59 - start[1])/2), 49), 0);
+		const ex = Math.max(Math.min(Math.floor((end[0]+51)/2), 49), 0);
+		const ey = Math.max(Math.min(Math.floor((59 - end[1])/2), 49), 0);
+
+		const cell_width = Math.abs(ex - sx);
+		const cell_height = Math.abs(ey - sy);
+
+		const miny = sy > ey ? ey : sy;
+		const minx = sx > ex ? ex : sx;
+
+
+		let result = [];
+		for (let i = miny; i <= miny + cell_height; i++) {
+			for (let j = minx; j <= minx + cell_width; j++) {
+				const cube_x1 = 2*j - 51;
+				const cube_x2 = 2*j - 49;
+				const cube_y1 = 59 - 2*i;
+				const cube_y2 = 57 - 2*i;
+				const cube_z1 = this.tiles[i][j].maxZ;
+				const cube_z2 = this.tiles[i][j].minZ;
+
+				const lineInY1 = lineInY(direction, start, cube_y1);
+				const lineInY2 = lineInY(direction, start, cube_y2);
+
+				if (testX(cube_x1, cube_x2, lineInY1[0], lineInY2[0]) && testZ(cube_z1, cube_z2, lineInY1[2], lineInY2[2])) {
+					const lineInX1 = lineInX(direction, start, cube_x1);
+					const lineInX2 = lineInX(direction, start, cube_x2);
+					if (testY(cube_y1, cube_y2, lineInX1[1], lineInX2[1])) {
+						result.push({ i, j });
+					}
+				}
+			}
+		}
+		result = _.sortBy(result, ({i,j}) => {
+			const x = 2*j - 50;
+			const y = 58 - 2*i;
+			const z = this.tiles[i][j].maxZ;
+			return ((start[0] - x)*(start[0] - x)+(start[1]-y)*(start[1]-y)+(start[2] - z)*(start[2] - z));
+		});
+		if (result.length) {
+			return [result[0]];
+		} else {
+			return [];
+		}
+	}
+}
+
+
+function testX(cube_x2, cube_x1, x1, x2) {
+	const minx = Math.min(x1, x2);
+	const maxx = minx === x1 ? x2 : x1;
+	return (minx <= cube_x2 && maxx >= cube_x2)
+			|| (maxx >= cube_x1 && minx <= cube_x1) || (maxx <= cube_x1 && minx >= cube_x2);
+}
+
+function testY(cube_y1, cube_y2, y1, y2) {
+	const miny = Math.min(y1, y2);
+	const maxy = miny === y1 ? y2 : y1;
+	return (miny <= cube_y2 && maxy >= cube_y2) || (maxy >= cube_y1 && miny <= cube_y1);
+}
+
+function testZ(cube_z1, cube_z2, z1, z2) {
+	const minz = Math.min(z1, z2);
+	const maxz = minz === z1 ? z2 : z1;
+	return (minz <= cube_z2 && maxz >= cube_z2) || (maxz >= cube_z1 && minz <= cube_z1);
+}
+
+function lineInX([dx,dy,dz], [a,b,c], X) {
+	const k = (X - a) / dx;
+	return [ X, b+k*dy, c+k*dz ];
+}
+
+function lineInY([dx,dy,dz], [a,b,c], Y) {
+	const k = (Y - b) / dy;
+	return [ a+k*dx, Y, c+k*dz ];
 }
 
 class Triangle {

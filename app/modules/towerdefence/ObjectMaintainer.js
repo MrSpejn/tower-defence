@@ -3,8 +3,8 @@ import Minion from "./objects/Minion";
 import Missile from "./objects/Missile";
 
 export default class ObjectMaintainer {
-	createTurret(x, y) {
-		return new Turret({ x, y, z: 150 });
+	createTurret(x, y, z = 75) {
+		return new Turret({ x, y, z });
 	}
 	createMinion(track, progress) {
 		return new Minion({ z: 0 }, { track, progress });
@@ -16,15 +16,15 @@ export default class ObjectMaintainer {
 		let object = null;
 		switch (blueprint.type) {
 		case "MISSILE":
-			object = new Missile(blueprint.coordinates, blueprint.options);
+			object = new Missile(blueprint.coordinates || {}, blueprint.options || {});
 			missiles.push(object);
 			return object;
 		case "MINION":
-			object = new Minion(blueprint.coordinates, blueprint.options);
+			object = new Minion(blueprint.coordinates || {}, blueprint.options || {});
 			minions.push(object);
 			return object;
 		case "TURRET":
-			object = new Turret(blueprint.coordinates, blueprint.options);
+			object = new Turret(blueprint.coordinates || {}, blueprint.options || {});
 			turrets.push(object);
 			return object;
 		default: throw `Invalid object type ${blueprint.type}`;

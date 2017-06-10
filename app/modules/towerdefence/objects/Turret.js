@@ -74,7 +74,7 @@ export function findPossibleTargets(stage, turret, minions, debug) {
 	return minions
 	.filter(minion => {
 		const vec2MinionPosition = $V([ minion.coordinates.x, minion.coordinates.y ]);
-		const range = (turret.range);
+		const range = (turret.range) + (turret.coordinates.z - minion.coordinates.z)/1.5;
 		const distance = vec2Position.subtract(vec2MinionPosition).modulus();
 		return distance < range;
 	})

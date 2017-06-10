@@ -61,14 +61,17 @@ function updateTrack(minion, stage) {
 		minion.progress++;
 		const directionCell = minion.track[minion.progress];
 
-		if (!directionCell || getNextCell(minion)[1] > 49 || getNextCell(minion)[0] > 49)
+		if (!directionCell)
 			return minionReachedEnd(stage, minion);
 		else {
 			const vecDest = $V([ directionCell[1]*50, directionCell[0]*50 ]);
 			minion.destination = vecDest;
 		}
 	}
-
+	if (getNextCell(minion)[1] > 49 || getNextCell(minion)[0] > 49) {
+		return minionReachedEnd(stage, minion);
+	}
+	
 	followTrack(minion, minion.track);
 	calculateSpeedCorrectionFor3DTerrain(minion, stage.fields.heights);
 }

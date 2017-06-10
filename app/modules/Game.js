@@ -5,6 +5,7 @@ const PAUSED = "PAUSED";
 const DEFAULT = "DEFAULT";
 const INITIALIZED = "INITIALIZED";
 
+
 export default class Game {
 	constructor(stage, controls, physics, display) {
 		this.stage = stage;
@@ -21,6 +22,25 @@ export default class Game {
 
 			if (object1.collisionIndex > object2.collisionIndex) {
 				object1.collideWith(object2, this.stage);
+			}
+		});
+		document.addEventListener("keypress", event => {
+			if (event.key == "z" && event.ctrlKey ) {
+				this.stage.cancelLastOp();
+			}
+		});
+		this.hoverObject = null;
+		this.display.on("unhover", () => {
+			this.display.removeObjects(this.hoverObject);
+		});
+		this.display.on("hover", el => {
+			this.hoverObject = this.stage.promptForHoverObject(el);
+			this.display.setHoverObject(this.hoverObject);
+		});
+
+		this.display.on("click", el => {
+			if (el && el.i && el.j) {
+				this.stage.createTurret(el.i, el.j);
 			}
 		});
 
@@ -59,7 +79,6 @@ export default class Game {
 			console.log("Win");
 		}
 		const end = new Date();
-		//console.log("Frame time", end - start);
 	}
 }
 

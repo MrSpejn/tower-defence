@@ -1,6 +1,8 @@
 import Actor from "./Actor";
 import { Matrix, $V } from "../../math/sylvester";
 import { combineNormals } from "../../math/grid-normals";
+import { polylandFromModel } from "../../physics/Polyland";
+import _ from "lodash";
 
 let id = 0;
 export default class LandCluster extends Actor {
@@ -41,6 +43,25 @@ export default class LandCluster extends Actor {
 			this.texCoordBuffer = `landmarkt${id}`;
 			this.texCoordArray = calculateTexCoords(ftypes, this.vertexCount);
 		}
+
+		this.polyland = polylandFromModel(this, {translateX(x){ return x;}, translateY(y){ return y;}, translateZ(z){ return z;}});
+
+	}
+
+	intersect(start, end, direction) {
+		return this.polyland.intersect(start, end, direction);
+	}
+
+	getVertices(i, j) {
+		if (i < 0 || i > 49 || j < 0 || j > 49) throw `Wrong cell: ${i} ${j}`;
+		const indices = this.indices.slice(j*24+i*50*24,j*24+i*50*24+24);
+		const vertices = indices.map(idx => [this.vertices[idx*3],this.vertices[idx*3+1],this.vertices[idx*3+2]+0.1]);
+		const normals = indices.map(idx => [1,1,1]);
+		return [_.flatten(vertices), _.flatten(normals)];
+	}
+
+	getHeights(i, j) {
+		return this.polyland.tiles[i][j];
 	}
 }
 
@@ -132,6 +153,8 @@ function calculateCoordinates(heights, size, startX, startY) {
 	const coordinatesList = [];
 	const coordinatesFlat = [];
 
+	let min = 1000;
+	let max = -1000;
 	for (let i = 0; i <= heights.length*2; i++) {
 		coordinatesMatrix.push([]);
 		for (let j = 0; j <= heights[0].length*2; j++) {
@@ -145,6 +168,10 @@ function calculateCoordinates(heights, size, startX, startY) {
 			}
 			const x = translateX(size/2*(j-1)+startX);
 			const y = translateY(size/2*(i-1)+startY);
+
+			if (y < min) min = y;
+			if (y > max) max = y;
+
 			coordinatesMatrix[i][j] = [x, y, h];
 			coordinatesList.push([x, y, h]);
 			coordinatesFlat.push(x);
