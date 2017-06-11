@@ -5,7 +5,6 @@ import ObjectMaintainer from "./ObjectMaintainer";
 import LandPlaner from "./LandPlaner";
 import CreateTurretOperation from "./CreateTurretOperation";
 import Highlight from "../webgl/actors/Highlight";
-import towerOBJ from "../../models/tower.obj";
 import ObjActor from "../webgl/actors/ObjActor";
 
 import { polylandFromModel } from "../physics/Polyland";

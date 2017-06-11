@@ -27,7 +27,10 @@
 		"Uint32Array":true,
         "Matrix": true,
         "$V": true,
-		"Symbol": true
+		"Symbol": true,
+		"minionOBJ": true,
+		"missileOBJ": true,
+		"towerOBJ": true
     },
 	"plugins": [
     	"react"

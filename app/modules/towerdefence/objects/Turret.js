@@ -1,5 +1,4 @@
 import GameObject from "./Object";
-import towerOBJ from "../../../models/tower.obj";
 import ObjActor from "../../webgl/actors/ObjActor";
 import { $V } from "../../math/sylvester";
 

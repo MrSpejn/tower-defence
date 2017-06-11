@@ -1,4 +1,3 @@
-import missileOBJ from "../../../models/missile.obj";
 import ObjActor from "../../webgl/actors/ObjActor";
 import GameObject from "./Object";
 import Cannon from "cannon";

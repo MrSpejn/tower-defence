@@ -1,4 +1,3 @@
-import minionOBJ from "../../../models/minion.obj";
 import ObjActor from "../../webgl/actors/ObjActor";
 import Cannon from "cannon";
 import GameObject from "./Object";
@@ -71,7 +70,7 @@ function updateTrack(minion, stage) {
 	if (getNextCell(minion)[1] > 49 || getNextCell(minion)[0] > 49) {
 		return minionReachedEnd(stage, minion);
 	}
-	
+
 	followTrack(minion, minion.track);
 	calculateSpeedCorrectionFor3DTerrain(minion, stage.fields.heights);
 }

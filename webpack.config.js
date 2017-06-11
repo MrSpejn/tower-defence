@@ -3,9 +3,12 @@ const DashboardPlugin = require('webpack-dashboard/plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
-    entry: './app/main.js',
+    entry: {
+		bundle: './app/main.js',
+		models_bundle: './app/models.js'
+	},
 	output: {
-		filename: 'bundle.js',
+		filename: '[name].js',
 		path: path.resolve(__dirname, 'app')
 	},
 	devtool: 'source-map',
